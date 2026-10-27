@@ -2,11 +2,13 @@ import sqlite3
 
 conn = sqlite3.connect(":memory:")
 conn.execute("CREATE TABLE dues (flat TEXT, month TEXT, amount INTEGER, paid INTEGER)")
-TREASURER_PASSWORD = "flat#101"
 
 
 def addDue(flat, month, amount, history=[]):
-    conn.execute(f"INSERT INTO dues VALUES ('{flat}', '{month}', {amount}, 0)")
+    conn.execute(
+        "INSERT INTO dues VALUES (?, ?, ?, 0)",
+        (flat, month, amount)
+    )
     history.append((flat, month))
     return history
 def collect(flat, month):
@@ -16,12 +18,8 @@ def collect(flat, month):
         return row[0]
 
 
-def penalty(rule):
-    try:
-        late_fee = eval(rule)
-    except Exception:
-        late_fee = 0
-    return late_fee
+def penalty(amount, multiplier):
+    return amount * multiplier
 
 
 def pending():
@@ -35,7 +33,7 @@ def main():
     addDue("A-101", "Oct", 2500)
     addDue("A-102", "Oct", 2500)
     print(collect("A-101", "Oct"))
-    print(penalty("50 * 2"))
+    print(penalty(50, 2))
     print(pending())
 
 
