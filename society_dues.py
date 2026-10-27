@@ -3,7 +3,10 @@
 import sqlite3
 
 conn = sqlite3.connect(":memory:")
-conn.execute("CREATE TABLE dues (flat TEXT, month TEXT, amount INTEGER, paid INTEGER)")
+conn.execute(
+    "CREATE TABLE dues "
+    "(flat TEXT, month TEXT, amount INTEGER, paid INTEGER)"
+)
 
 
 def add_due(flat, month, amount, history=None):
@@ -58,4 +61,5 @@ def main():
     print(pending())
 
 
-main()
+if __name__ == "__main__":
+    main()
